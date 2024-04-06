@@ -38,11 +38,29 @@ window.addEventListener('load', () => {
     newBubble(0, 0, 10000);
 
     for (let i = 0; i < 1000; i++) {
-        const minSize = 50;
-        const maxSize = 5000;
+        const minSize = 200;
+        const maxSize = 50000;
         const size = Math.exp(Math.random() * Math.log(maxSize / minSize) + Math.log(minSize));
-        const x = Math.random() * 5000 - 2500;
-        const y = 500 - Math.random() * 10000;
+
+        // should be while true in theory but we don't want infinite loops
+        let x, y;
+        for (let i = 0; i < 100; i++) {
+            x = Math.random() * 5000 - 2500;
+            y = 500 - Math.random() * 10000;
+            // x = Math.random() * 1000 - 500;
+            // y = Math.random() * 1000 - 500;
+
+            // check that it's not too close to any other bubble
+            for (let j = 0; j < bubbles.length; j++) {
+                const dx = x - bubbles[j].x;
+                const dy = y - bubbles[j].y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                distance -= Math.sqrt(size) / 2 + Math.sqrt(bubbles[j].size) / 2;
+                if (distance > 0) {
+                    break;
+                }
+            }
+        }
         newBubble(x, y, size);
     }
 
@@ -80,7 +98,8 @@ window.addEventListener('load', () => {
                 if (overlap > 0) {
                     const smaller = Math.min(bubbles[i].size, bubbles[j].size);
                     const eatR = Math.min(overlap, smaller);
-                    const eat = Math.pow(eatR, 2);
+                    let eat = Math.pow(eatR, 2);
+                    eat = Math.min(eat, smaller);
 
                     // bigger eats smaller, slowly
                     if (bubbles[i].size > bubbles[j].size) {
