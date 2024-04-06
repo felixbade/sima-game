@@ -1,4 +1,5 @@
 import { app, container } from './render.js'
+import { cameraFollow } from './cameraFollow.js'
 import { noise } from './noise.js'
 const { controller, InputType } = UniversalGameController;
 
@@ -126,6 +127,8 @@ window.addEventListener('load', () => {
             bubbles[0].x = 0;
             bubbles[0].y = 0;
         }
+
+        cameraFollow(bubbles[0]);
     });
 
 });
