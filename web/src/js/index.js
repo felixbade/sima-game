@@ -70,7 +70,8 @@ window.addEventListener('load', () => {
     }
 
     // bubbles[0] is the player
-    newBubble(0, 0, 5000);
+    const initialPlayerSize = 5000;
+    newBubble(0, 0, initialPlayerSize);
 
     // Swawn initial bubbles
     for (let i = 0; i < 300; i++) {
@@ -108,7 +109,7 @@ window.addEventListener('load', () => {
             bubbles[0].vx += acceleration * controller.move.x;
             bubbles[0].vy += acceleration * controller.move.y;
 
-            score = Math.max(score, Math.round(bubbles[0].size / 500));
+            score = Math.max(score, Math.round((bubbles[0].size - initialPlayerSize) / 500));
         }
 
         // Random mobement in the noise field + boyancy
