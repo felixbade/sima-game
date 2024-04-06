@@ -108,7 +108,7 @@ window.addEventListener('load', () => {
             bubbles[0].vx += acceleration * controller.move.x;
             bubbles[0].vy += acceleration * controller.move.y;
 
-            score = Math.max(score, Math.round(bubbles[0].size / 100));
+            score = Math.max(score, Math.round(bubbles[0].size / 500));
         }
 
         // Random mobement in the noise field + boyancy
