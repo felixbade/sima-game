@@ -32,7 +32,9 @@ export const cameraFollow = sprite => {
     };
 
     // Exponential smoothing
-    const t = mapClamp(1 / (Math.sqrt(r(diff)) * 1.2 + 1), 1, 0.1, 0.5, 0.07);
+    const farSnap = 0.04;
+    const endSnap = 0.2;
+    const t = mapClamp(1 / (Math.sqrt(r(diff)) * 1.2 + 1), 1, 0.1, endSnap, farSnap);
     // const t = 0.07
     container.x += diff.x * t;
     container.y += diff.y * t;

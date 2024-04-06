@@ -38,7 +38,7 @@ window.addEventListener('load', () => {
     // bubbles[0] is the player
     newBubble(0, 0, 10000);
 
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 300; i++) {
         const minSize = 200;
         const maxSize = 50000;
         const size = Math.exp(Math.random() * Math.log(maxSize / minSize) + Math.log(minSize));
@@ -46,7 +46,7 @@ window.addEventListener('load', () => {
         // should be while true in theory but we don't want infinite loops
         let x, y;
         for (let i = 0; i < 100; i++) {
-            x = Math.random() * 5000 - 2500;
+            x = Math.random() * 2000 - 1000;
             y = 500 - Math.random() * 10000;
             // x = Math.random() * 1000 - 500;
             // y = Math.random() * 1000 - 500;
@@ -66,9 +66,12 @@ window.addEventListener('load', () => {
     }
 
     app.ticker.add(dt => {
-        const speed = 5;
-        bubbles[0].x += controller.move.x * dt * speed;
-        bubbles[0].y += controller.move.y * dt * speed;
+        if (true) { // just for scoping the variable names
+            const speed = 12;
+            const t = 0.04;
+            bubbles[0].vx = (1 - t) * bubbles[0].vx + t * controller.move.x * speed;
+            bubbles[0].vy = (1 - t) * bubbles[0].vy + t * controller.move.y * speed;
+        }
 
         for (let i = 0; i < bubbles.length; i++) {
             // random floating in the field
@@ -76,12 +79,14 @@ window.addEventListener('load', () => {
             const noiseX = bubbles[i].x / 500;
             const noiseY = bubbles[i].y / 500;
             const noiseDelta = 0.001;
-            const drag = 0.01;
+            const drag = 0.03;
             const current = 0.1;
+            const boyancy = Math.sqrt(bubbles[i].size) * 0.01;
             let vx = noise(noiseX + noiseDelta, noiseY, time) - noise(noiseX, noiseY, time);
             let vy = noise(noiseX, noiseY + noiseDelta, time) - noise(noiseX, noiseY, time);
             vx *= current / noiseDelta;
             vy *= current / noiseDelta;
+            vy -= boyancy;
 
             const dvx = bubbles[i].vx - vx;
             const dvy = bubbles[i].vy - vy;
