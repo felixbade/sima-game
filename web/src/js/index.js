@@ -3,6 +3,27 @@ import { cameraFollow } from './cameraFollow.js'
 import { noise } from './noise.js'
 const { controller, InputType } = UniversalGameController;
 
+const sendScore = async (score) => {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (!token) {
+        alert('No token found in URL');
+        return;
+    }
+
+    const response = await fetch('https://sima.bloat.app/submit_highscore', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            token,
+            score,
+        }),
+    });
+};
+
 window.addEventListener('load', () => {
     let gameOver = false;
 
@@ -136,7 +157,8 @@ window.addEventListener('load', () => {
 
         if (!gameOver && bubbles[0].size < 500) {
             gameOver = true;
-            alert('game over');
+            const score = 1;
+            sendScore(score);
         }
     });
 
