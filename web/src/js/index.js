@@ -129,6 +129,10 @@ window.addEventListener('load', () => {
         }
 
         cameraFollow(bubbles[0]);
+
+        // background follows the camera
+        bg.x = -container.x;
+        bg.y = -container.y;
     });
 
 });
