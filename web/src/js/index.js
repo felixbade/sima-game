@@ -17,7 +17,8 @@ window.addEventListener('load', () => {
 
     app.ticker.add(delta => {
         // needed here for resize
-        bg.beginFill(0x8B4513);
+        // rgb(217, 156, 56)
+        bg.beginFill(0xd99c38);
         const aspect = app.screen.width / app.screen.height;
         bg.drawRect(-aspect * 500, -500, aspect * 1000, 1000);
         bg.endFill();
