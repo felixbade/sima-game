@@ -4,6 +4,8 @@ import { noise } from './noise.js'
 const { controller, InputType } = UniversalGameController;
 
 window.addEventListener('load', () => {
+    let gameOver = false;
+
     const gameContainer = new PIXI.Container();
     container.addChild(gameContainer);
 
@@ -66,9 +68,11 @@ window.addEventListener('load', () => {
     }
 
     app.ticker.add(dt => {
-        const acceleration = 0.25;
-        bubbles[0].vx += acceleration * controller.move.x;
-        bubbles[0].vy += acceleration * controller.move.y;
+        if (!gameOver) {
+            const acceleration = 0.25;
+            bubbles[0].vx += acceleration * controller.move.x;
+            bubbles[0].vy += acceleration * controller.move.y;
+        }
 
         for (let i = 0; i < bubbles.length; i++) {
             // random floating in the field
@@ -129,6 +133,11 @@ window.addEventListener('load', () => {
         // background follows the camera
         bg.x = -container.x;
         bg.y = -container.y;
+
+        if (!gameOver && bubbles[0].size < 500) {
+            gameOver = true;
+            alert('game over');
+        }
     });
 
 });
