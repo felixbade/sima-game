@@ -8,7 +8,6 @@ const sendScore = async (score) => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     if (!token) {
-        alert('No token found in URL');
         return;
     }
 
@@ -26,25 +25,37 @@ const sendScore = async (score) => {
 
 window.addEventListener('load', () => {
     let gameOver = false;
+    let score = 0;
 
     const gameContainer = new PIXI.Container();
     container.addChild(gameContainer);
 
-    // brown background
-    const bg = new PIXI.Graphics();
-    // ok this lagged too much when it was in ticker. but it will not resize now
-    bg.beginFill(0xd99c38);
-    const aspect = app.screen.width / app.screen.height;
-    bg.drawRect(-aspect * 500, -500, aspect * 1000, 1000);
-    bg.endFill();
+    // Background
+    const bgTexture = PIXI.Texture.from('assets/images/bg-sima-tile.png');
+    const bgContainer = new PIXI.Container();
+    gameContainer.addChild(bgContainer);
 
-    gameContainer.addChild(bg);
+    const bgSprites = [];
+    const bgScale = 0.5;
+    const bgSizeX = 720 * bgScale;
+    const bgSizeY = 1280 * bgScale;
+    for (let x = -5; x <= 5; x++) {
+        for (let y = -5; y <= 5; y++) {
+            const bgSprite = new PIXI.Sprite(bgTexture);
+            bgSprite.anchor.set(bgScale);
+            bgSprite.scale.set(bgScale);
+            bgSprite.x = x * bgSizeX;
+            bgSprite.y = y * bgSizeY;
+            bgSprite.dx = x * bgSizeX;
+            bgSprite.dy = y * bgSizeY;
+            bgContainer.addChild(bgSprite);
+            bgSprites.push(bgSprite);
+        }
+    }
 
-    // todo: sima bubble
+    // Sima bubbles
     const bubbleTexture = PIXI.Texture.from('assets/images/bubble.png');
-
     const bubbles = [];
-
     const newBubble = (x, y, size) => {
         const bubble = new PIXI.Sprite(bubbleTexture);
         bubble.anchor.set(0.5);
@@ -61,6 +72,7 @@ window.addEventListener('load', () => {
     // bubbles[0] is the player
     newBubble(0, 0, 5000);
 
+    // Swawn initial bubbles
     for (let i = 0; i < 300; i++) {
         const minSize = 2000;
         const maxSize = 100000;
@@ -88,15 +100,19 @@ window.addEventListener('load', () => {
         newBubble(x, y, size);
     }
 
+    // Game loop
     app.ticker.add(dt => {
         if (!gameOver) {
+            // Disable controller when game is over
             const acceleration = 0.25;
             bubbles[0].vx += acceleration * controller.move.x;
             bubbles[0].vy += acceleration * controller.move.y;
+
+            score = Math.max(score, Math.round(bubbles[0].size / 100));
         }
 
+        // Random mobement in the noise field + boyancy
         for (let i = 0; i < bubbles.length; i++) {
-            // random floating in the field
             const time = app.ticker.lastTime / 1000 * 0.3;
             const noiseX = bubbles[i].x / 500;
             const noiseY = bubbles[i].y / 500;
@@ -116,7 +132,7 @@ window.addEventListener('load', () => {
             bubbles[i].vy -= dvy * dt * drag;
         }
 
-        // bubbles that are touching get merged
+        // Bubbles that are touching get merged
         for (let i = 0; i < bubbles.length; i++) {
             for (let j = i + 1; j < bubbles.length; j++) {
                 const dx = bubbles[i].x - bubbles[j].x;
@@ -142,6 +158,7 @@ window.addEventListener('load', () => {
             }
         }
 
+        // Update bubble positions
         for (let i = 0; i < bubbles.length; i++) {
             bubbles[i].x += bubbles[i].vx * dt;
             bubbles[i].y += bubbles[i].vy * dt;
@@ -149,15 +166,19 @@ window.addEventListener('load', () => {
             bubbles[i].scale.set(2 * bubbles[i].radius / 240); // 240px size bubble
         }
 
+        // Look at the player
         cameraFollow(bubbles[0]);
 
-        // background follows the camera
-        bg.x = -container.x;
-        bg.y = -container.y;
+        // Background follows the camera
+        // bg.x = -container.x;
+        // bg.y = -container.y;
+        bgContainer.x = Math.round(bubbles[0].x / bgSizeX) * bgSizeX;
+        bgContainer.y = Math.round(bubbles[0].y / bgSizeY) * bgSizeY;
 
-        if (!gameOver && bubbles[0].size < 500) {
+        // Game over condition
+        if (!gameOver && (bubbles[0].size < 500 || bubbles[0].y < -7000)) {
             gameOver = true;
-            const score = 1;
+            alert('Game over! Your score: ' + score);
             sendScore(score);
         }
     });
