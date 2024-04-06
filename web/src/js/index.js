@@ -7,10 +7,6 @@ window.addEventListener('load', () => {
 
     // brown background
     const bg = new PIXI.Graphics();
-    bg.beginFill(0x8B4513);
-    const aspect = app.screen.width / app.screen.height;
-    bg.drawRect(-aspect * 500, -500, aspect * 1000, 1000);
-    bg.endFill();
     container.addChild(bg);
 
     // todo: sima bubble
@@ -20,6 +16,12 @@ window.addEventListener('load', () => {
     gameContainer.addChild(particle);
 
     app.ticker.add(delta => {
+        // needed here for resize
+        bg.beginFill(0x8B4513);
+        const aspect = app.screen.width / app.screen.height;
+        bg.drawRect(-aspect * 500, -500, aspect * 1000, 1000);
+        bg.endFill();
+
         const speed = 5;
         particle.x += controller.move.x * delta * speed;
         particle.y += controller.move.y * delta * speed;
