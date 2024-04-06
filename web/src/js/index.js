@@ -49,13 +49,15 @@ window.addEventListener('load', () => {
         bubbles[0].y += controller.move.y * delta * speed;
 
         for (let i = 1; i < bubbles.length; i++) {
-            const time = app.ticker.lastTime / 1000 / 30;
+            const time = app.ticker.lastTime / 1000 * 0.2;
             const noiseX = bubbles[i].x / 300;
             const noiseY = bubbles[i].y / 300;
-            const dx = noise(noiseX, noiseY, time);
-            const dy = noise(noiseX, noiseY, time + 1000);
-            bubbles[i].x += dx;
-            bubbles[i].y += dy;
+            const delta = 0.001;
+            const speed = 0.1;
+            const dx = noise(noiseX + delta, noiseY, time) - noise(noiseX, noiseY, time);
+            const dy = noise(noiseX, noiseY + delta, time) - noise(noiseX, noiseY, time);
+            bubbles[i].x += dx / delta * speed;
+            bubbles[i].y += dy / delta * speed;
         }
 
         // if trigger is pressed, move player to the center
