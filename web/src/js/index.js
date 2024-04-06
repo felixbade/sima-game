@@ -23,14 +23,22 @@ window.addEventListener('load', () => {
         bg.drawRect(-aspect * 500, -500, aspect * 1000, 1000);
         bg.endFill();
 
+
+    // todo: sima bubble
+    const bubbleTexture = PIXI.Texture.from('assets/images/bubble.png');
+
+    const bubble = new PIXI.Sprite(bubbleTexture);
+    bubble.anchor.set(0.5);
+    bubble.scale.set(0.5); // 2x dpi
+    gameContainer.addChild(bubble);
         const speed = 5;
-        particle.x += controller.move.x * delta * speed;
-        particle.y += controller.move.y * delta * speed;
+        bubble.x += controller.move.x * delta * speed;
+        bubble.y += controller.move.y * delta * speed;
 
         // if trigger is pressed, move player to the center
         if (controller.trigger) {
-            particle.x = 0;
-            particle.y = 0;
+            bubble.x = 0;
+            bubble.y = 0;
         }
     });
 
