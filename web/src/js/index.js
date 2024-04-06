@@ -127,12 +127,6 @@ window.addEventListener('load', () => {
             bubbles[i].scale.set(2 * bubbles[i].radius / 240); // 240px size bubble
         }
 
-        // if trigger is pressed, move player to the center
-        if (controller.trigger) {
-            bubbles[0].x = 0;
-            bubbles[0].y = 0;
-        }
-
         cameraFollow(bubbles[0]);
 
         // background follows the camera
