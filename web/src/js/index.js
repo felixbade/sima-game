@@ -36,11 +36,11 @@ window.addEventListener('load', () => {
     }
 
     // bubbles[0] is the player
-    newBubble(0, 0, 10000);
+    newBubble(0, 0, 5000);
 
     for (let i = 0; i < 300; i++) {
-        const minSize = 200;
-        const maxSize = 50000;
+        const minSize = 2000;
+        const maxSize = 100000;
         const size = Math.exp(Math.random() * Math.log(maxSize / minSize) + Math.log(minSize));
 
         // should be while true in theory but we don't want infinite loops
@@ -66,12 +66,9 @@ window.addEventListener('load', () => {
     }
 
     app.ticker.add(dt => {
-        if (true) { // just for scoping the variable names
-            const speed = 12;
-            const t = 0.04;
-            bubbles[0].vx = (1 - t) * bubbles[0].vx + t * controller.move.x * speed;
-            bubbles[0].vy = (1 - t) * bubbles[0].vy + t * controller.move.y * speed;
-        }
+        const acceleration = 0.25;
+        bubbles[0].vx += acceleration * controller.move.x;
+        bubbles[0].vy += acceleration * controller.move.y;
 
         for (let i = 0; i < bubbles.length; i++) {
             // random floating in the field
