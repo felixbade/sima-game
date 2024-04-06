@@ -26,16 +26,18 @@ async def start(update, context):
 
 async def button(update, context):
     query = update.callback_query
-    user_id = query.from_user.id
-    # chat_id = query.message.chat_id
-    inline_message_id = query.inline_message_id
 
-    # Create a JWT token with a short expiration time for security
     token_data = {
-        'user_id': user_id,
-        'inline_message_id': inline_message_id,
+        'user_id': query.from_user.id,
         'exp': datetime.utcnow() + timedelta(minutes=60)
     }
+
+    if query.inline_message_id:
+        token_data['inline_message_id'] = query.inline_message_id
+    else:
+        token_data['chat_id'] = query.message.chat_id
+        token_data['message_id'] = query.message.message_id
+
     token = jwt.encode(token_data, jwt_secret_key, algorithm='HS256')
 
     url = f'https://sima.bloat.app/?token={token}'

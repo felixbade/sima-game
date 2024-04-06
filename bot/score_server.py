@@ -15,14 +15,8 @@ jwt_secret_key = os.getenv('JWT_SECRET_KEY')
 port = int(os.getenv('PORT'))
 
 
-def set_telegram_game_score(bot_token, user_id, inline_message_id, score):
+def set_telegram_game_score(bot_token, payload):
     method_url = f"https://api.telegram.org/bot{bot_token}/setGameScore"
-    payload = {
-        'user_id': user_id,
-        'inline_message_id': inline_message_id,
-        'score': int(score)
-    }
-
     response = requests.post(method_url, data=payload)
     return response.json()  # or handle response as needed
 
@@ -35,9 +29,25 @@ async def submit_highscore(request):
 
         decoded_data = jwt.decode(token, jwt_secret_key, algorithms=['HS256'])
         user_id = decoded_data['user_id']
-        inline_message_id = decoded_data['inline_message_id']
 
-        set_telegram_game_score(tg_token, user_id, inline_message_id, score)
+        if 'inline_message_id' in decoded_data:
+            inline_message_id = decoded_data['inline_message_id']
+            payload = {
+                'user_id': user_id,
+                'inline_message_id': inline_message_id,
+                'score': int(score)
+            }
+        else:
+            chat_id = decoded_data['chat_id']
+            message_id = decoded_data['message_id']
+            payload = {
+                'user_id': user_id,
+                'chat_id': chat_id,
+                'message_id': message_id,
+                'score': int(score)
+            }
+
+        set_telegram_game_score(tg_token, payload)
 
         return web.Response(text='Highscore submitted successfully.', status=200)
 
