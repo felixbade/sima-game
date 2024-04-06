@@ -88,14 +88,27 @@ window.addEventListener('load', () => {
             // y = Math.random() * 1000 - 500;
 
             // check that it's not too close to any other bubble
+            let tooClose = false;
             for (let j = 0; j < bubbles.length; j++) {
                 const dx = x - bubbles[j].x;
                 const dy = y - bubbles[j].y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
                 distance -= Math.sqrt(size) / 2 + Math.sqrt(bubbles[j].size) / 2;
-                if (distance > 0) {
+                if (distance < 0) {
+                    tooClose = true;
                     break;
                 }
+            }
+            // distance to the player
+            const dx = x - bubbles[0].x;
+            const dy = y - bubbles[0].y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            distance -= Math.sqrt(size) / 2 * 2 + Math.sqrt(bubbles[0].size) / 2;
+            if (distance < 0) {
+                tooClose = true;
+            }
+            if (!tooClose) {
+                break;
             }
         }
         newBubble(x, y, size);
