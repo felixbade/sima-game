@@ -18,20 +18,39 @@ window.addEventListener('load', () => {
     // todo: sima bubble
     const bubbleTexture = PIXI.Texture.from('assets/images/bubble.png');
 
-    const bubble = new PIXI.Sprite(bubbleTexture);
-    bubble.anchor.set(0.5);
-    bubble.scale.set(0.5); // 2x dpi
-    gameContainer.addChild(bubble);
+    const bubbles = [];
+
+    const newBubble = (x, y, size) => {
+        const bubble = new PIXI.Sprite(bubbleTexture);
+        bubble.anchor.set(0.5);
+        bubble.scale.set(0.5 * size / 100); // 2x dpi
+        bubble.x = x;
+        bubble.y = y;
+        gameContainer.addChild(bubble);
+        bubbles.push(bubble);
+    }
+
+    // bubbles[0] is the player
+    newBubble(0, 0, 30);
+
+    for (let i = 0; i < 50; i++) {
+        const minSize = 10;
+        const maxSize = 500;
+        const size = Math.exp(Math.random() * Math.log(maxSize / minSize) + Math.log(minSize));
+        const x = Math.random() * 1000 - 500;
+        const y = Math.random() * 1000 - 500;
+        newBubble(x, y, size);
+    }
 
     app.ticker.add(delta => {
         const speed = 5;
-        bubble.x += controller.move.x * delta * speed;
-        bubble.y += controller.move.y * delta * speed;
+        bubbles[0].x += controller.move.x * delta * speed;
+        bubbles[0].y += controller.move.y * delta * speed;
 
         // if trigger is pressed, move player to the center
         if (controller.trigger) {
-            bubble.x = 0;
-            bubble.y = 0;
+            bubbles[0].x = 0;
+            bubbles[0].y = 0;
         }
     });
 
