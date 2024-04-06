@@ -7,11 +7,11 @@ export const cameraFollow = sprite => {
 
     const r = a => Math.sqrt(a.x * a.x + a.y * a.y);
 
-    const speedCompensation = 13;
-    const lookAhead = 10;
-    const lookAheadMax = 30;
-    const vx = sprite.vx || 0;
-    const vy = sprite.vy || 0;
+    const speedCompensation = 0;
+    const lookAhead = 50;
+    const lookAheadMax = 300;
+    const vx = 0 * sprite.vx || 0;
+    const vy = 0 * sprite.vy || 0;
     const vr = r({ x: vx, y: vy });
     let vxClamped = vx;
     let vyClamped = vy;
