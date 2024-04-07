@@ -78,6 +78,16 @@ window.addEventListener('load', () => {
         }
     }
 
+    // Instructions
+    // swipe-to-play.png
+    const instructionsTexture = PIXI.Texture.from('assets/images/swipe-to-play.png');
+    const instructions = new PIXI.Sprite(instructionsTexture);
+    instructions.anchor.set(0.5);
+    instructions.scale.set(0.5 * 1.25);
+    instructions.x = 0;
+    instructions.y = -200;
+    gameContainer.addChild(instructions);
+
     // Sima bubbles
     const bubbleTexture = PIXI.Texture.from('assets/images/bubble.png');
     const bubbles = [];
@@ -141,6 +151,7 @@ window.addEventListener('load', () => {
 
     // add score here to be on top of the bubbles
     gameContainer.addChild(scoreContainer);
+
 
     // Game loop
     app.ticker.add(dt => {
