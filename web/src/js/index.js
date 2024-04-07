@@ -60,7 +60,6 @@ window.addEventListener('load', () => {
         numberTextures.push(texture);
     }
     const scoreContainer = new PIXI.Container();
-    gameContainer.addChild(scoreContainer);
 
     const setScore = (score) => {
         // Clear old score
@@ -139,6 +138,9 @@ window.addEventListener('load', () => {
         }
         newBubble(x, y, size);
     }
+
+    // add score here to be on top of the bubbles
+    gameContainer.addChild(scoreContainer);
 
     // Game loop
     app.ticker.add(dt => {
