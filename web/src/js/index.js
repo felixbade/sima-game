@@ -27,6 +27,9 @@ window.addEventListener('load', () => {
     let gameOver = false;
     let score = 0;
 
+    const surfaceY = -7000;
+    const bubbleSpawnWidth = 5000;
+
     const gameContainer = new PIXI.Container();
     container.addChild(gameContainer);
 
@@ -137,7 +140,7 @@ window.addEventListener('load', () => {
         // should be while true in theory but we don't want infinite loops
         let x, y;
         for (let i = 0; i < 100; i++) {
-            x = Math.random() * 2000 - 1000;
+            x = Math.random() * bubbleSpawnWidth - bubbleSpawnWidth / 2;
             y = 5000 - Math.random() * 7500;
             // x = Math.random() * 1000 - 500;
             // y = Math.random() * 1000 - 500;
