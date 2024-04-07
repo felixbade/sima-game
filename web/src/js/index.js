@@ -261,6 +261,10 @@ window.addEventListener('load', () => {
         scoreContainer.x = -container.x;
         scoreContainer.y = -container.y - 480;
 
+        // Foam container x follows the camera
+        foamContainer.x = Math.round(bubbles[0].x / foamSizeX) * foamSizeX;
+
+
         // Game over condition
         if (!gameOver && (bubbles[0].size < 500 || bubbles[0].y < surfaceY)) {
             gameOver = true;
