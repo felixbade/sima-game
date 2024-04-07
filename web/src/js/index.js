@@ -83,7 +83,7 @@ window.addEventListener('load', () => {
         let x, y;
         for (let i = 0; i < 100; i++) {
             x = Math.random() * 2000 - 1000;
-            y = 2500 - Math.random() * 10000;
+            y = 5000 - Math.random() * 10000;
             // x = Math.random() * 1000 - 500;
             // y = Math.random() * 1000 - 500;
 
