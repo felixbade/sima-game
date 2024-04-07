@@ -175,6 +175,15 @@ window.addEventListener('load', () => {
     // add score here to be on top of the bubbles
     gameContainer.addChild(scoreContainer);
 
+    // game over screen
+    // game-over.png
+    const gameOverTexture = PIXI.Texture.from('assets/images/game-over.png');
+    const gameOverSprite = new PIXI.Sprite(gameOverTexture);
+    gameOverSprite.anchor.set(0.5);
+    gameOverSprite.x = 0;
+    gameOverSprite.y = 0;
+    gameContainer.addChild(gameOverSprite);
+
 
     // Game loop
     app.ticker.add(dt => {
@@ -185,6 +194,12 @@ window.addEventListener('load', () => {
             bubbles[0].vy += acceleration * controller.move.y;
 
             score = Math.max(score, Math.round((bubbles[0].size - initialPlayerSize) / 500));
+
+            // hide game over screen
+            gameOverSprite.scale.set(0);
+        } else {
+            // show game over screen
+            gameOverSprite.scale.set(1);
         }
 
         setScore(score);
@@ -266,6 +281,10 @@ window.addEventListener('load', () => {
 
         // Foam container x follows the camera
         foamContainer.x = Math.round(bubbles[0].x / foamSizeX) * foamSizeX;
+
+        // game over follows the camera
+        gameOverSprite.x = -container.x;
+        gameOverSprite.y = -container.y;
 
 
         // Game over condition
