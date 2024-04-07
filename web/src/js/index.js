@@ -78,6 +78,26 @@ window.addEventListener('load', () => {
         }
     }
 
+    // foam (foam.png)
+    // repeats horizontally
+    const foamTexture = PIXI.Texture.from('assets/images/foam.png');
+    const foamContainer = new PIXI.Container();
+    gameContainer.addChild(foamContainer);
+    const foamSprites = [];
+    const foamScale = 0.5;
+    const foamSizeX = 720 * foamScale; // 720px image
+
+    for (let x = -5; x <= 5; x++) {
+        const foamSprite = new PIXI.Sprite(foamTexture);
+        foamSprite.anchor.set(foamScale);
+        foamSprite.scale.set(foamScale);
+        foamSprite.x = x * foamSizeX;
+        // 200 comes from the graphics
+        foamSprite.y = -200 + surfaceY;
+        foamContainer.addChild(foamSprite);
+        foamSprites.push(foamSprite);
+    }
+
     // Instructions
     // swipe-to-play.png
     const instructionsTexture = PIXI.Texture.from('assets/images/swipe-to-play.png');
@@ -221,6 +241,13 @@ window.addEventListener('load', () => {
             bubbles[i].scale.set(2 * bubbles[i].radius / 240); // 240px size bubble
         }
 
+        // Bubbles over the surface get popped
+        for (let i = 0; i < bubbles.length; i++) {
+            if (bubbles[i].y < surfaceY) {
+                bubbles[i].size = 0;
+            }
+        }
+
         // Look at the player
         cameraFollow(bubbles[0]);
 
@@ -235,7 +262,7 @@ window.addEventListener('load', () => {
         scoreContainer.y = -container.y - 480;
 
         // Game over condition
-        if (!gameOver && (bubbles[0].size < 500 || bubbles[0].y < -7000)) {
+        if (!gameOver && (bubbles[0].size < 500 || bubbles[0].y < surfaceY)) {
             gameOver = true;
             alert('Game over! Your score: ' + score);
             sendScore(score);
