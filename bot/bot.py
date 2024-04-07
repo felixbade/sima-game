@@ -29,8 +29,13 @@ async def button(update, context):
 
     token_data = {
         'user_id': query.from_user.id,
-        'exp': datetime.utcnow() + timedelta(minutes=60)
+        'exp': datetime.utcnow() + timedelta(minutes=60),
     }
+
+    if hasattr(query.from_user, 'first_name'):
+        token_data['first_name'] = query.from_user.first_name
+    if hasattr(query.from_user, 'last_name'):
+        token_data['last_name'] = query.from_user.last_name
 
     if query.inline_message_id:
         token_data['inline_message_id'] = query.inline_message_id

@@ -13,10 +13,21 @@ load_dotenv()
 tg_token = os.getenv('TG_TOKEN')
 jwt_secret_key = os.getenv('JWT_SECRET_KEY')
 port = int(os.getenv('PORT'))
+tg_notification_group_id = os.getenv('TG_NOTIFICATION_GROUP_ID')
 
 
 def set_telegram_game_score(bot_token, payload):
     method_url = f"https://api.telegram.org/bot{bot_token}/setGameScore"
+    response = requests.post(method_url, data=payload)
+    return response.json()  # or handle response as needed
+
+
+def send_message(bot_token, chat_id, text):
+    method_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    payload = {
+        'chat_id': chat_id,
+        'text': text
+    }
     response = requests.post(method_url, data=payload)
     return response.json()  # or handle response as needed
 
@@ -48,6 +59,14 @@ async def submit_highscore(request):
             }
 
         set_telegram_game_score(tg_token, payload)
+
+        name = f'User user_id'
+        if 'first_name' in decoded_data:
+            name = decoded_data['first_name']
+            if 'last_name' in decoded_data:
+                name += ' ' + decoded_data['last_name']
+        send_message(tg_token, tg_notification_group_id,
+                     f'{name} got {score} points.')
 
         return web.Response(text='Highscore submitted successfully.', status=200)
 
