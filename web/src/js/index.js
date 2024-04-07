@@ -67,10 +67,14 @@ window.addEventListener('load', () => {
         scoreContainer.removeChildren();
 
         const scoreString = score.toString();
+        const numberScale = 0.8;
+        const numberWidth = numberTextures[0].width * numberScale;
+        const scoreWidth = scoreString.length * numberWidth;
         for (let i = 0; i < scoreString.length; i++) {
             const digit = parseInt(scoreString[i]);
             const sprite = new PIXI.Sprite(numberTextures[digit]);
-            sprite.x = i * 40;
+            sprite.scale.set(numberScale);
+            sprite.x = i * numberWidth - scoreWidth / 2;
             scoreContainer.addChild(sprite);
         }
     }
