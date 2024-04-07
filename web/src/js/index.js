@@ -53,6 +53,28 @@ window.addEventListener('load', () => {
         }
     }
 
+    // Number textures
+    const numberTextures = [];
+    for (let i = 0; i < 10; i++) {
+        const texture = PIXI.Texture.from('assets/images/numbers/' + i + '.png');
+        numberTextures.push(texture);
+    }
+    const scoreContainer = new PIXI.Container();
+    gameContainer.addChild(scoreContainer);
+
+    const setScore = (score) => {
+        // Clear old score
+        scoreContainer.removeChildren();
+
+        const scoreString = score.toString();
+        for (let i = 0; i < scoreString.length; i++) {
+            const digit = parseInt(scoreString[i]);
+            const sprite = new PIXI.Sprite(numberTextures[digit]);
+            sprite.x = i * 40;
+            scoreContainer.addChild(sprite);
+        }
+    }
+
     // Sima bubbles
     const bubbleTexture = PIXI.Texture.from('assets/images/bubble.png');
     const bubbles = [];
@@ -125,6 +147,8 @@ window.addEventListener('load', () => {
             score = Math.max(score, Math.round((bubbles[0].size - initialPlayerSize) / 500));
         }
 
+        setScore(score);
+
         // Random mobement in the noise field + boyancy
         for (let i = 0; i < bubbles.length; i++) {
             const time = app.ticker.lastTime / 1000 * 0.3;
@@ -188,6 +212,10 @@ window.addEventListener('load', () => {
         // bg.y = -container.y;
         bgContainer.x = Math.round(bubbles[0].x / bgSizeX) * bgSizeX;
         bgContainer.y = Math.round(bubbles[0].y / bgSizeY) * bgSizeY;
+
+        // Score follows the camera
+        scoreContainer.x = -container.x;
+        scoreContainer.y = -container.y - 480;
 
         // Game over condition
         if (!gameOver && (bubbles[0].size < 500 || bubbles[0].y < -7000)) {
