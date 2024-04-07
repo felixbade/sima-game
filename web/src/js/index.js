@@ -268,7 +268,6 @@ window.addEventListener('load', () => {
         // Game over condition
         if (!gameOver && (bubbles[0].size < 500 || bubbles[0].y < surfaceY)) {
             gameOver = true;
-            alert('Game over! Your score: ' + score);
             sendScore(score);
         }
     });
