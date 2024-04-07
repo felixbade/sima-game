@@ -75,8 +75,8 @@ window.addEventListener('load', () => {
 
     // Swawn initial bubbles
     for (let i = 0; i < 300; i++) {
-        const minSize = 2000;
-        const maxSize = 100000;
+        const minSize = 1000;
+        const maxSize = 50000;
         const size = Math.exp(Math.random() * Math.log(maxSize / minSize) + Math.log(minSize));
 
         // should be while true in theory but we don't want infinite loops
