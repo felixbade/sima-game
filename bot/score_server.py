@@ -1,10 +1,16 @@
 import os
+import logging
 
 import requests
 from aiohttp import web
 from dotenv import load_dotenv
 import jwt
 from jwt.exceptions import DecodeError, ExpiredSignatureError
+
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -32,7 +38,20 @@ def send_message(bot_token, chat_id, text):
     return response.json()  # or handle response as needed
 
 
+async def log_request(request):
+    logger.info(f"Received request: {request.method} {request.path}")
+    logger.info(f"Headers: {dict(request.headers)}")
+    logger.info(f"Query: {dict(request.query)}")
+    try:
+        # Get text data of the request, this will log the raw body that the browser sent
+        data = await request.text()
+        logger.info(f"Body: {data}")
+    except Exception as e:
+        logger.warning(f"Request body could not be logged: {e}")
+
+
 async def submit_highscore(request):
+    await log_request(request)
     try:
         data = await request.json()
         score = data.get('score')
@@ -78,8 +97,13 @@ async def submit_highscore(request):
         return web.Response(text=str(e), status=500)
 
 
+async def submit_start(request):
+    await log_request(request)
+    return web.Response(text='OK', status=200)
+
 app = web.Application()
 app.router.add_post('/submit_highscore', submit_highscore)
+app.router.add_post('/submit_start', submit_start)
 
 
 def start_server():

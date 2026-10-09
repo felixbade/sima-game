@@ -1,10 +1,15 @@
 import os
 from datetime import timedelta, datetime
+import logging
 
 from dotenv import load_dotenv
 import jwt
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Load environment variables from .env file
 load_dotenv()

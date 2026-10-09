@@ -23,7 +23,30 @@ const sendScore = async (score) => {
     });
 };
 
+const sendStart = async () => {
+
+	//document.body.innerHTML = 'moi' // testing
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (!token) {
+        return;
+    }
+
+    const response = await fetch('https://sima.bloat.app/submit_start', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            token,
+        }),
+    });
+};
+
 window.addEventListener('load', () => {
+    sendStart(); // no await
+
     let gameOver = false;
     let score = 0;
 
@@ -103,10 +126,10 @@ window.addEventListener('load', () => {
 
     // Instructions
     // swipe-to-play.png
-    const instructionsTexture = PIXI.Texture.from('assets/images/swipe-to-play.png');
+    const instructionsTexture = PIXI.Texture.from('assets/images/swipe-to-play-2.png');
     const instructions = new PIXI.Sprite(instructionsTexture);
     instructions.anchor.set(0.5);
-    instructions.scale.set(0.5 * 1.25);
+    instructions.scale.set(0.5);
     instructions.x = 0;
     instructions.y = -200;
     gameContainer.addChild(instructions);
